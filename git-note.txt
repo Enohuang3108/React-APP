@@ -1,0 +1,15 @@
+git fetch origin master:tmp 
+//在本地新建一個temp分支，並將遠端origin倉庫的master分支程式碼下載到本地temp分支
+//修改完需再push上去
+
+git diff tmp 
+//來比較原生代碼與剛剛從遠端下載下來的程式碼的區別
+
+git merge tmp
+//合併temp分支到本地的master分支
+
+git pull <遠端主機名> <遠端分支名>:<本地分支名>
+//取回遠端主機某個分支的更新，再與本地的指定分支合併。
+
+<Switch>新版react-router-dom已被Routes取代，需降版至5.2.0
+>>npm install --save react-router-dom@5.2.0
