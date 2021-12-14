@@ -1,3 +1,15 @@
+--------環境設定
+#插件-格式化[Prettier - Code formatter]
+#插件-標記括弧[Bracket Pair Colorizer]
+#插件-[Chinese (Traditional) Language Pack for Visual Studio Code]
+
+
+
+--------建立專案
+
+
+
+--------git
 git fetch origin master:tmp 
 //在本地新建一個temp分支，並將遠端origin倉庫的master分支程式碼下載到本地temp分支
 //修改完需再push上去
@@ -13,3 +25,7 @@ git pull <遠端主機名> <遠端分支名>:<本地分支名>
 
 <Switch>新版react-router-dom已被Routes取代，需降版至5.2.0
 >>npm install --save react-router-dom@5.2.0
+
+
+--------開始串接firebase
+npm install firebase
