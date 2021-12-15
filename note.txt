@@ -35,3 +35,6 @@ git push
 
 --------開始串接firebase
 npm install firebase
+
+若firestore無法使用，請
+import "firebase/compat/firestore";

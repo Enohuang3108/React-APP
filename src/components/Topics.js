@@ -17,9 +17,9 @@ function Topics() {
       });
   }, []);
   return (
-    <List>
+    <List animated selection>
       {topics.map((topic) => {
-        return <List.Item>{topic.name}</List.Item>;
+        return <List.Item key={topics.name}>{topic.name}</List.Item>;
       })}
     </List>
   );

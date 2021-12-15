@@ -21,8 +21,8 @@ function Header() {
       <Menu.Menu position="right">
         {user ? (
           <>
-            <Menu.Item as={Link} to="/report">
-              報告
+            <Menu.Item as={Link} to="/new-report">
+              新增報告
             </Menu.Item>
             <Menu.Item as={Link} to="/userInfo">
               個人資訊
