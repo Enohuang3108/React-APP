@@ -4,6 +4,8 @@ import { List } from "semantic-ui-react";
 
 function Topics() {
   const [topics, setTopics] = React.useState([]);
+
+  /* -----透過firebase取得topics資料----- */
   React.useEffect(() => {
     firebase
       .firestore()
@@ -16,6 +18,8 @@ function Topics() {
         setTopics(data);
       });
   }, []);
+  /* -----透過firebase取得topics資料----- */
+
   return (
     <List animated selection>
       {topics.map((topic) => {
