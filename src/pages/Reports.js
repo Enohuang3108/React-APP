@@ -6,6 +6,7 @@ import {
   Icon,
   Container,
 } from "semantic-ui-react"; /* 分割元件 */
+import { Link } from "react-router-dom";
 import Topics from "../components/Topics";
 import firebase from "../utils/firebase";
 function Reports() {
@@ -38,7 +39,7 @@ function Reports() {
             <Item.Group>
               {posts.map((post) => {
                 return (
-                  <Item key={post.id}>
+                  <Item key={post.id} as={Link} to={`/posts/${post.id}`}>
                     <Item.Image
                       src={
                         post.imageUrl ||
