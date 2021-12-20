@@ -20,12 +20,43 @@ function Report() {
       .firestore()
       .collection("posts")
       .doc(postId)
-      .get()
+      .onSnapshot((docSanapshot) => {
+        /* 隨時監聽 */
+        const data = docSanapshot.data();
+        setPost(data);
+      });
+    /* .get()
       .then((docSanpshot) => {
         const data = docSanpshot.data();
         setPost(data);
       }); /* doc是抓集合下的某個文件 */
   }, []);
+
+  function toggleCollected() {
+    const uid = firebase.auth().currentUser.uid;
+    if (isCollected) {
+      firebase
+        .firestore()
+        .collection("posts")
+        .doc(postId)
+        .update({
+          collectedBy: firebase.firestore.FieldValue.arrayRemove(uid),
+        });
+    } else {
+      firebase
+        .firestore()
+        .collection("posts")
+        .doc(postId)
+        .update({
+          collectedBy: firebase.firestore.FieldValue.arrayUnion(uid),
+        });
+    }
+  }
+
+  const isCollected = post.collectedBy?.includes(
+    firebase.auth().currentUser.uid
+  );
+
   return (
     <Container>
       <Grid>
@@ -34,8 +65,12 @@ function Report() {
             <Topics />
           </Grid.Column>
           <Grid.Column width={10}>
-            <Image src={post.author.photoURL} />
-            {post.author.displayName}
+            {post.author.photoURL ? (
+              <Image src={post.author.photoURL} />
+            ) : (
+              <Icon name="user circle" />
+            )}
+            {post.author.displayName || "使用者"}
             <Header>
               {post.title}
               <Header.Subheader>
@@ -49,7 +84,12 @@ function Report() {
             <Segment basic vertical>
               留言 0 · 讚 0 ·
               <Icon name="thumbs up outline" color="grey" /> ·
-              <Icon name="bookmark outline" color="grey" />
+              <Icon
+                name={`${isCollected ? "bookmark" : "bookmark outline"}`}
+                color={isCollected ? "blue" : "grey"}
+                link
+                onClick={toggleCollected}
+              />
             </Segment>
           </Grid.Column>
           <Grid.Column width={3}>訓練目標</Grid.Column>
