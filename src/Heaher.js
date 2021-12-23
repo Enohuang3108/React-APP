@@ -12,7 +12,7 @@ function Header() {
   }, []); /* 選染完後執行監聽 */
   return (
     <Menu>
-      <Menu.Item as={Link} to="/">
+      <Menu.Item as={Link} to="/posts">
         React APP
       </Menu.Item>
       <Menu.Item>
@@ -24,7 +24,7 @@ function Header() {
             <Menu.Item as={Link} to="/new-report">
               新增報告
             </Menu.Item>
-            <Menu.Item as={Link} to="/userInfo">
+            <Menu.Item as={Link} to="/my">
               個人資訊
             </Menu.Item>
             <Menu.Item onClick={() => firebase.auth().signOut()}>

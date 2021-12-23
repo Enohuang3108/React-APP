@@ -1,6 +1,7 @@
 import React from "react";
 import firebase from "../utils/firebase";
 import { List } from "semantic-ui-react";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 function Topics() {
   const [topics, setTopics] = React.useState([]);
@@ -23,7 +24,11 @@ function Topics() {
   return (
     <List animated selection>
       {topics.map((topic) => {
-        return <List.Item key={topics.name}>{topic.name}</List.Item>;
+        return (
+          <List.Item as={Link} to={topic.path} key={topics.name}>
+            {topic.name}
+          </List.Item>
+        );
       })}
     </List>
   );

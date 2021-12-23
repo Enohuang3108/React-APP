@@ -29,45 +29,33 @@ function Reports() {
       });
   }, []);
   return (
-    <Container>
-      <Grid>
-        <Grid.Row>
-          <Grid.Column width={3}>
-            <Topics />
-          </Grid.Column>
-          <Grid.Column width={10}>
-            <Item.Group>
-              {posts.map((post) => {
-                return (
-                  <Item key={post.id} as={Link} to={`/posts/${post.id}`}>
-                    <Item.Image
-                      src={
-                        post.imageUrl ||
-                        "https://react.semantic-ui.com/images/wireframe/image.png"
-                      }
-                    />
-                    <Item.Content>
-                      <Item.Meta>
-                        {post.author.photoURL ? (
-                          <Image src={post.author.photoURL} />
-                        ) : (
-                          <Icon name="user circle" />
-                        )}
-                        {post.topic}．{post.author.displayName || "使用者"}
-                      </Item.Meta>
-                      <Item.Header>{post.title}</Item.Header>
-                      <Item.Description>{post.content}</Item.Description>
-                      <Item.Extra>留言 0．讚 0</Item.Extra>
-                    </Item.Content>
-                  </Item>
-                );
-              })}
-            </Item.Group>
-          </Grid.Column>
-          <Grid.Column width={3}>訓練目標</Grid.Column>
-        </Grid.Row>
-      </Grid>
-    </Container>
+    <Item.Group>
+      {posts.map((post) => {
+        return (
+          <Item key={post.id} as={Link} to={`/posts/${post.id}`}>
+            <Item.Image
+              src={
+                post.imageUrl ||
+                "https://react.semantic-ui.com/images/wireframe/image.png"
+              }
+            />
+            <Item.Content>
+              <Item.Meta>
+                {post.author.photoURL ? (
+                  <Image src={post.author.photoURL} />
+                ) : (
+                  <Icon name="user circle" />
+                )}
+                {post.topic}．{post.author.displayName || "使用者"}
+              </Item.Meta>
+              <Item.Header>{post.title}</Item.Header>
+              <Item.Description>{post.content}</Item.Description>
+              <Item.Extra>留言 0．讚 0</Item.Extra>
+            </Item.Content>
+          </Item>
+        );
+      })}
+    </Item.Group>
   );
 }
 export default Reports;

@@ -21,7 +21,7 @@ function Report() {
       .collection("posts")
       .doc(postId)
       .onSnapshot((docSanapshot) => {
-        /* 隨時監聽 */
+        /* 隨時監聽 資料改變重拿一次 */
         const data = docSanapshot.data();
         setPost(data);
       });
@@ -58,44 +58,34 @@ function Report() {
   );
 
   return (
-    <Container>
-      <Grid>
-        <Grid.Row>
-          <Grid.Column width={3}>
-            <Topics />
-          </Grid.Column>
-          <Grid.Column width={10}>
-            {post.author.photoURL ? (
-              <Image src={post.author.photoURL} />
-            ) : (
-              <Icon name="user circle" />
-            )}
-            {post.author.displayName || "使用者"}
-            <Header>
-              {post.title}
-              <Header.Subheader>
-                {post.topic}‧{post.createdAt?.toDate().toLocaleDateString()}
-              </Header.Subheader>
-            </Header>
-            <Image src={post.imageUrl} />
-            <Segment basic vertical>
-              {post.content}
-            </Segment>
-            <Segment basic vertical>
-              留言 0 · 讚 0 ·
-              <Icon name="thumbs up outline" color="grey" /> ·
-              <Icon
-                name={`${isCollected ? "bookmark" : "bookmark outline"}`}
-                color={isCollected ? "blue" : "grey"}
-                link
-                onClick={toggleCollected}
-              />
-            </Segment>
-          </Grid.Column>
-          <Grid.Column width={3}>訓練目標</Grid.Column>
-        </Grid.Row>
-      </Grid>
-    </Container>
+    <Grid.Column width={10}>
+      {post.author.photoURL ? (
+        <Image src={post.author.photoURL} />
+      ) : (
+        <Icon name="user circle" />
+      )}
+      {post.author.displayName || "使用者"}
+      <Header>
+        {post.title}
+        <Header.Subheader>
+          {post.topic}‧{post.createdAt?.toDate().toLocaleDateString()}
+        </Header.Subheader>
+      </Header>
+      <Image src={post.imageUrl} />
+      <Segment basic vertical>
+        {post.content}
+      </Segment>
+      <Segment basic vertical>
+        留言 0 · 讚 0 ·
+        <Icon name="thumbs up outline" color="grey" /> ·
+        <Icon
+          name={`${isCollected ? "bookmark" : "bookmark outline"}`}
+          color={isCollected ? "blue" : "grey"}
+          link
+          onClick={toggleCollected}
+        />
+      </Segment>
+    </Grid.Column>
   );
 }
 
