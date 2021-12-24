@@ -5,6 +5,7 @@ import {
   Image,
   Icon,
   Container,
+  Divider,
 } from "semantic-ui-react"; /* 分割元件 */
 import { Link } from "react-router-dom";
 import Topics from "../components/Topics";
@@ -42,7 +43,13 @@ function Reports() {
             <Item.Content>
               <Item.Meta>
                 {post.author.photoURL ? (
-                  <Image src={post.author.photoURL} />
+                  <Image
+                    src={post.author.photoURL}
+                    style={{
+                      borderRadius: 50,
+                    }}
+                    size="mini"
+                  />
                 ) : (
                   <Icon name="user circle" />
                 )}
@@ -51,6 +58,12 @@ function Reports() {
               <Item.Header>{post.title}</Item.Header>
               <Item.Description>{post.content}</Item.Description>
               <Item.Extra>留言 0．讚 0</Item.Extra>
+              <Divider variant="inset" component="li" />
+              <div>
+                &nbsp;
+                <br />
+                <br />
+              </div>
             </Item.Content>
           </Item>
         );

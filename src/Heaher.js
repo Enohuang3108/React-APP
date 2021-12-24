@@ -24,7 +24,7 @@ function Header() {
             <Menu.Item as={Link} to="/new-report">
               新增報告
             </Menu.Item>
-            <Menu.Item as={Link} to="/my">
+            <Menu.Item as={Link} to="/my/info">
               個人資訊
             </Menu.Item>
             <Menu.Item onClick={() => firebase.auth().signOut()}>

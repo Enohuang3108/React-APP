@@ -9,7 +9,7 @@ import {
 import firebase from "../utils/firebase";
 import React from "react";
 
-function MyName(user) {
+function MyName({ user }) {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [displayName, setDisplayName] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
@@ -61,7 +61,7 @@ function MyName(user) {
   );
 }
 
-function MyPhoto(user) {
+function MyPhoto({ user }) {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [file, setFile] = React.useState(null);
   const previewImageUrl = file ? URL.createObjectURL(file) : user.photoURL;
@@ -106,7 +106,12 @@ function MyPhoto(user) {
       <Modal open={isModalOpen} size="mini">
         <Modal.Header>修改使用者照片</Modal.Header>
         <Modal.Content image>
-          <Image src={previewImageUrl} avatar wrapped />
+          <Image
+            src={previewImageUrl}
+            avatar
+            style={{ resizeMode: "contain" }}
+            size="small"
+          />
           <Modal.Description>
             <Button as="label" htmlFor="post-image">
               上傳

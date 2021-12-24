@@ -28,6 +28,12 @@ git add .
 git commit -m"infor"
 git push
 
+--------git恢復版本
+git reflog
+git reset 3bd796c --hard
+git reset --hard HEAD~1
+
+
 
 <Switch>新版react-router-dom已被Routes取代，需降版至5.2.0
 >>npm install --save react-router-dom@5.2.0
