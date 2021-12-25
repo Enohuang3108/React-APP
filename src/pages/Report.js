@@ -60,7 +60,7 @@ function Report() {
   return (
     <Grid.Column width={10}>
       {post.author.photoURL ? (
-        <Image src={post.author.photoURL} />
+        <Image src={post.author.photoURL} avatar />
       ) : (
         <Icon name="user circle" />
       )}

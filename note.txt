@@ -3,7 +3,7 @@
 #插件-標記括弧[Bracket Pair Colorizer]
 #插件-[Chinese (Traditional) Language Pack for Visual Studio Code]
 
-
+#安裝偵測網頁滑到底：[npm install  react-waypoint]
 
 --------建立專案
 
