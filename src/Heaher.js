@@ -3,13 +3,7 @@ import { Link } from "react-router-dom";
 import React from "react";
 import firebase from "./utils/firebase";
 
-function Header() {
-  const [user, setUser] = React.useState(null);
-  React.useEffect(() => {
-    firebase.auth().onAuthStateChanged((currenUser) => {
-      setUser(currenUser); /* firebase User State */
-    });
-  }, []); /* 選染完後執行監聽 */
+function Header({ user }) {
   return (
     <Menu>
       <Menu.Item as={Link} to="/posts">

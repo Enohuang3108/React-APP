@@ -1,5 +1,6 @@
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { Container, Grid } from "semantic-ui-react";
+import firebase from "./utils/firebase";
 import Header from "./Heaher";
 import Signin from "./pages/signin";
 import Reports from "./pages/Reports";
@@ -8,11 +9,22 @@ import Report from "./pages/Report";
 import Topics from "./components/Topics";
 import MyMenu from "./pages/MyMenu";
 import MyInfo from "./pages/MyInfo";
-MyMenu;
+import React from "react";
+import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
+
 function App() {
+  //  監聽使用者
+  const [user, setUser] = React.useState(null);
+  React.useEffect(() => {
+    firebase.auth().onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
+    });
+    return () => {};
+  }, []);
+  //  監聽使用者
   return (
     <BrowserRouter>
-      <Header />
+      <Header user={user} />
       <Switch>
         <Route path="/posts">
           <Container>
@@ -24,10 +36,10 @@ function App() {
                 <Grid.Column width={10}>
                   <Switch>
                     <Route path="/posts" exact>
-                      <Reports />
+                      {user ? <Reports /> : <Redirect to="/signin" />}
                     </Route>
                     <Route path="/posts/:postId" exact>
-                      <Report />
+                      {user ? <Report /> : <Redirect to="/signin" />}
                     </Route>
                   </Switch>
                 </Grid.Column>
@@ -38,36 +50,41 @@ function App() {
         </Route>
 
         <Route path="/my">
-          <Container>
-            <Grid>
-              <Grid.Row>
-                <Grid.Column width={3}>
-                  <MyMenu />
-                </Grid.Column>
-                <Grid.Column width={10}>
-                  <Switch>
-                    <Route path="/my/info" exact>
-                      <MyInfo />
-                    </Route>
-                    <Route path="/my/data" exact>
-                      /my/data
-                    </Route>
-                    <Route path="/my/history" exact>
-                      /my/history
-                    </Route>
-                  </Switch>
-                </Grid.Column>
-                <Grid.Column width={3}>訓練目標</Grid.Column>
-              </Grid.Row>
-            </Grid>
-          </Container>
+          {user ? (
+            <Container>
+              <Grid>
+                <Grid.Row>
+                  <Grid.Column width={3}>
+                    <MyMenu />
+                  </Grid.Column>
+                  <Grid.Column width={10}>
+                    <Switch>
+                      <Route path="/my/info" exact>
+                        <MyInfo user={user} />
+                      </Route>
+                      <Route path="/my/data" exact>
+                        /my/data
+                      </Route>
+                      <Route path="/my/history" exact>
+                        /my/history
+                      </Route>
+                    </Switch>
+                  </Grid.Column>
+                  <Grid.Column width={3}>訓練目標</Grid.Column>
+                </Grid.Row>
+              </Grid>
+            </Container>
+          ) : (
+            <Redirect to="/posts" />
+          )}
+          {/* 若非登入導到首頁 */}
         </Route>
 
         <Route path="/signin" exact>
-          <Signin />
+          {user ? <Redirect to="/posts" /> : <Signin />}
         </Route>
         <Route path="/new-report" exact>
-          <NewReport />
+          {user ? <NewReport /> : <Redirect to="/signin" />}
         </Route>
         <Route path="/posts/:postId" exact>
           {" "}
