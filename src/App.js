@@ -9,6 +9,8 @@ import Report from "./pages/Report";
 import Topics from "./components/Topics";
 import MyMenu from "./pages/MyMenu";
 import MyInfo from "./pages/MyInfo";
+import MyData from "./pages/MyData";
+import MyHistory from "./pages/MyHistory";
 import React from "react";
 import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
 
@@ -57,20 +59,20 @@ function App() {
                   <Grid.Column width={3}>
                     <MyMenu />
                   </Grid.Column>
-                  <Grid.Column width={10}>
+                  <Grid.Column width={12}>
                     <Switch>
                       <Route path="/my/info" exact>
                         <MyInfo user={user} />
                       </Route>
                       <Route path="/my/data" exact>
-                        /my/data
+                        <MyData />
                       </Route>
                       <Route path="/my/history" exact>
-                        /my/history
+                        <MyHistory />
                       </Route>
                     </Switch>
                   </Grid.Column>
-                  <Grid.Column width={3}>訓練目標</Grid.Column>
+                  {/* <Grid.Column width={3}>訓練目標</Grid.Column> */}
                 </Grid.Row>
               </Grid>
             </Container>

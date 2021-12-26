@@ -4,7 +4,7 @@
 #插件-[Chinese (Traditional) Language Pack for Visual Studio Code]
 
 #安裝偵測網頁滑到底：[npm install  react-waypoint]
-
+#安裝Recharts[npm install recharts]
 --------建立專案
 
 
