@@ -13,6 +13,7 @@ import MyData from "./pages/MyData";
 import MyHistory from "./pages/MyHistory";
 import React from "react";
 import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
+import AddData from "./pages/AddData";
 
 function App() {
   //  監聽使用者
@@ -85,8 +86,8 @@ function App() {
         <Route path="/signin" exact>
           {user ? <Redirect to="/posts" /> : <Signin />}
         </Route>
-        <Route path="/new-report" exact>
-          {user ? <NewReport /> : <Redirect to="/signin" />}
+        <Route path="/new-DBdata" exact>
+          {user ? <AddData /> : <Redirect to="/signin" />}
         </Route>
         <Route path="/posts/:postId" exact>
           {" "}

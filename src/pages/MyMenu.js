@@ -19,21 +19,38 @@ function MyMenu() {
     },
   ];
 
+  // const trainings = [
+  //   {
+  //     name: "ISOKINETIC",
+  //     path: "/my/history?training=ISOKINETIC",
+  //   },
+  //   {
+  //     name: "ISOTONIC",
+  //     path: "/my/history?training=ISOTONIC",
+  //   },
+  //   {
+  //     name: "ISOMETRIC",
+  //     path: "/my/history?training=ISOMETRIC",
+  //   },
+  // ];
+
   return (
-    <List animated selection>
-      {menuItems.map((menuItem) => {
-        return (
-          <List.Item
-            as={Link}
-            to={menuItem.path}
-            key={menuItem.name}
-            active={menuItem.path === location.pathname}
-          >
-            {menuItem.name}
-          </List.Item>
-        );
-      })}
-    </List>
+    <>
+      <List animated selection>
+        {menuItems.map((menuItem) => {
+          return (
+            <List.Item
+              as={Link}
+              to={menuItem.path}
+              key={menuItem.name}
+              active={menuItem.path === location.pathname}
+            >
+              {menuItem.name}
+            </List.Item>
+          );
+        })}
+      </List>
+    </>
   );
 }
 

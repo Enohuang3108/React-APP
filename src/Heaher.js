@@ -6,7 +6,7 @@ import firebase from "./utils/firebase";
 function Header({ user }) {
   return (
     <Menu>
-      <Menu.Item as={Link} to="/posts">
+      <Menu.Item as={Link} to="/my/info">
         React APP
       </Menu.Item>
       <Menu.Item>
@@ -15,8 +15,8 @@ function Header({ user }) {
       <Menu.Menu position="right">
         {user ? (
           <>
-            <Menu.Item as={Link} to="/new-report">
-              新增報告
+            <Menu.Item as={Link} to="/new-DBdata">
+              新增DB資料
             </Menu.Item>
             <Menu.Item as={Link} to="/my/info">
               個人資訊

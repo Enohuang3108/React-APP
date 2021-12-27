@@ -6,10 +6,14 @@ import {
   YAxis,
   Tooltip,
 } from "recharts";
-import { Header } from "semantic-ui-react";
+import { Item, Header, Divider } from "semantic-ui-react";
+import React from "react";
+import firebase from "../utils/firebase";
+import { useLocation } from "react-router-dom";
+import { Waypoint } from "react-waypoint";
 const data = [
   {
-    name: "Page A",
+    name: "123",
     uv: 4000,
     pv: 2400,
     amt: 2400,
@@ -48,53 +52,172 @@ const data = [
     name: "Page G",
     uv: 3490,
     pv: 4300,
-    amt: 2100,
+    amt: 4000,
   },
 ];
-
-const renderLineChart = (
-  <>
-    <Header>訓練歷程</Header>
-    <AreaChart
-      width={730}
-      height={250}
-      data={data}
-      margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-    >
-      <defs>
-        <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-          <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-        </linearGradient>
-        <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
-          <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
-        </linearGradient>
-      </defs>
-      <XAxis dataKey="name" />
-      <YAxis />
-      <CartesianGrid strokeDasharray="3 3" />
-      <Tooltip />
-      <Area
-        type="monotone"
-        dataKey="uv"
-        stroke="#8884d8"
-        fillOpacity={1}
-        fill="url(#colorUv)"
-      />
-      <Area
-        type="monotone"
-        dataKey="pv"
-        stroke="#82ca9d"
-        fillOpacity={1}
-        fill="url(#colorPv)"
-      />
-    </AreaChart>
-  </>
-);
+// const [datas, setDatas] = React.useState([]);
 
 function MyHistory() {
-  return renderLineChart;
+  const location = useLocation();
+  const urlSearchParams = new URLSearchParams(location.search);
+  const currentTopic = urlSearchParams.get("topic");
+  const lastPostSnapshotRef = React.useRef(); /* 取得目前最下面的快照 */
+  /* 取出firestore資料 */
+  const [posts, setPosts] = React.useState([]);
+  React.useEffect(() => {
+    if (currentTopic) {
+      firebase
+        .firestore()
+        .collection("posts")
+        .where("topic", "==", currentTopic) /* 篩選類別 */
+        .orderBy("createdAt", "desc") /* 依時間降冪排列(最新在前) */
+        .limit(2)
+        .get()
+        .then((collectionSnapshot) => {
+          const data = collectionSnapshot.docs.map((docSnapshot) => {
+            const id = docSnapshot.id;
+            return {
+              ...docSnapshot.data(),
+              id,
+            }; /* 解構return docSnapshot.data(); 將資料跟id合併 */
+          });
+          /* 抓最新文章的第二篇 */
+          lastPostSnapshotRef.current =
+            collectionSnapshot.docs[collectionSnapshot.docs.length - 1];
+          setPosts(data); /* 抓最新文章的第二篇 */
+        });
+    } else {
+      firebase
+        .firestore()
+        .collection("posts")
+        .orderBy("createdAt", "desc") /* 依時間降冪排列(最新在前) */
+        .limit(2) /* 限制顯示兩篇 */
+        .get()
+        .then((collectionSnapshot) => {
+          const data = collectionSnapshot.docs.map((docSnapshot) => {
+            const id = docSnapshot.id;
+            return {
+              ...docSnapshot.data(),
+              id,
+            }; /* 解構return docSnapshot.data(); 將資料跟id合併 */
+          });
+          lastPostSnapshotRef.current =
+            collectionSnapshot.docs[collectionSnapshot.docs.length - 1];
+          setPosts(data);
+        });
+    }
+  }, [currentTopic]);
+  return (
+    <>
+      <Header>訓練歷程</Header>
+      <AreaChart
+        width={730}
+        height={250}
+        data={data}
+        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+      >
+        <defs>
+          <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+            <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+          </linearGradient>
+          <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
+            <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+          </linearGradient>
+        </defs>
+        <XAxis dataKey="name" />
+        <YAxis />
+        <CartesianGrid strokeDasharray="3 3" />
+        <Tooltip />
+        <Area
+          type="monotone"
+          dataKey="uv"
+          stroke="#8884d8"
+          fillOpacity={1}
+          fill="url(#colorUv)"
+        />
+        <Area
+          type="monotone"
+          dataKey="pv"
+          stroke="#82ca9d"
+          fillOpacity={1}
+          fill="url(#colorPv)"
+        />
+      </AreaChart>
+      <Divider variant="middle" />
+      <Header size="medium">歷史訓練數據</Header>
+
+      <Item.Group>
+        {posts.map((post) => {
+          return (
+            <Item /* key={post.id} as={Link} to={`/posts/${post.id}`} */>
+              <Item.Content>
+                <Item.Header>{post.title}</Item.Header>
+                <Item.Description>{post.content}</Item.Description>
+
+                <Divider variant="inset" component="li" />
+                <div>
+                  &nbsp;
+                  <br />
+                  <br />
+                </div>
+              </Item.Content>
+            </Item>
+          );
+        })}
+      </Item.Group>
+      <Waypoint
+        //  偵測網頁滑到底
+        onEnter={() => {
+          if (lastPostSnapshotRef.current) {
+            if (currentTopic) {
+              firebase
+                .firestore()
+                .collection("posts")
+                .where("topic", "==", currentTopic) /* 篩選類別 */
+                .orderBy("createdAt", "desc") /* 依時間降冪排列(最新在前) */
+                .startAfter(lastPostSnapshotRef.current)
+                .limit(2)
+                .get()
+                .then((collectionSnapshot) => {
+                  const data = collectionSnapshot.docs.map((docSnapshot) => {
+                    const id = docSnapshot.id;
+                    return {
+                      ...docSnapshot.data(),
+                      id,
+                    }; /* 解構return docSnapshot.data(); 將資料跟id合併 */
+                  });
+                  lastPostSnapshotRef.current =
+                    collectionSnapshot.docs[collectionSnapshot.docs.length - 1];
+                  setPosts([...posts, ...data]);
+                });
+            } else {
+              firebase
+                .firestore()
+                .collection("posts")
+                .orderBy("createdAt", "desc") /* 依時間降冪排列(最新在前) */
+                .startAfter(lastPostSnapshotRef.current)
+                .limit(2) /* 限制顯示兩篇 */
+                .get()
+                .then((collectionSnapshot) => {
+                  const data = collectionSnapshot.docs.map((docSnapshot) => {
+                    const id = docSnapshot.id;
+                    return {
+                      ...docSnapshot.data(),
+                      id,
+                    }; /* 解構return docSnapshot.data(); 將資料跟id合併 */
+                  });
+                  lastPostSnapshotRef.current =
+                    collectionSnapshot.docs[collectionSnapshot.docs.length - 1];
+                  setPosts([...posts, ...data]); /* 解構原posts加上解構新增的 */
+                });
+            }
+          }
+        }}
+      />
+    </>
+  );
 }
 
 export default MyHistory;
