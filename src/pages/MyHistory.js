@@ -63,15 +63,15 @@ function MyHistory() {
   const currentTopic = urlSearchParams.get("topic");
   const lastPostSnapshotRef = React.useRef(); /* 取得目前最下面的快照 */
   /* 取出firestore資料 */
-  const [posts, setPosts] = React.useState([]);
-  React.useEffect(() => {
-    if (currentTopic) {
+  const [datas, setDatas] = React.useState([]);
+  React.useEffect(
+    () => {
       firebase
         .firestore()
-        .collection("posts")
-        .where("topic", "==", currentTopic) /* 篩選類別 */
-        .orderBy("createdAt", "desc") /* 依時間降冪排列(最新在前) */
-        .limit(2)
+        .collection("trainingData")
+        //.where("topic", "==", currentTopic) /* 篩選類別 */
+        .orderBy("startTime", "desc") /* 依時間降冪排列(最新在前) */
+        .limit(10)
         .get()
         .then((collectionSnapshot) => {
           const data = collectionSnapshot.docs.map((docSnapshot) => {
@@ -84,29 +84,10 @@ function MyHistory() {
           /* 抓最新文章的第二篇 */
           lastPostSnapshotRef.current =
             collectionSnapshot.docs[collectionSnapshot.docs.length - 1];
-          setPosts(data); /* 抓最新文章的第二篇 */
+          setDatas(data); /* 抓最新文章的第二篇 */
         });
-    } else {
-      firebase
-        .firestore()
-        .collection("posts")
-        .orderBy("createdAt", "desc") /* 依時間降冪排列(最新在前) */
-        .limit(2) /* 限制顯示兩篇 */
-        .get()
-        .then((collectionSnapshot) => {
-          const data = collectionSnapshot.docs.map((docSnapshot) => {
-            const id = docSnapshot.id;
-            return {
-              ...docSnapshot.data(),
-              id,
-            }; /* 解構return docSnapshot.data(); 將資料跟id合併 */
-          });
-          lastPostSnapshotRef.current =
-            collectionSnapshot.docs[collectionSnapshot.docs.length - 1];
-          setPosts(data);
-        });
-    }
-  }, [currentTopic]);
+    } /* [currentTopic] */
+  );
   return (
     <>
       <Header>訓練歷程</Header>
@@ -149,12 +130,13 @@ function MyHistory() {
       <Header size="medium">歷史訓練數據</Header>
 
       <Item.Group>
-        {posts.map((post) => {
+        {datas.map((data) => {
+          console.log(data.startTime);
           return (
-            <Item /* key={post.id} as={Link} to={`/posts/${post.id}`} */>
+            <Item /*key={data.id}  as={Link} to={`/posts/${post.id}`} */>
               <Item.Content>
-                <Item.Header>{post.title}</Item.Header>
-                <Item.Description>{post.content}</Item.Description>
+                <Item.Header>{data.startTime}</Item.Header>
+                <Item.Description>{data.trainingType}</Item.Description>
 
                 <Divider variant="inset" component="li" />
                 <div>
@@ -168,51 +150,28 @@ function MyHistory() {
         })}
       </Item.Group>
       <Waypoint
-        //  偵測網頁滑到底
         onEnter={() => {
           if (lastPostSnapshotRef.current) {
-            if (currentTopic) {
-              firebase
-                .firestore()
-                .collection("posts")
-                .where("topic", "==", currentTopic) /* 篩選類別 */
-                .orderBy("createdAt", "desc") /* 依時間降冪排列(最新在前) */
-                .startAfter(lastPostSnapshotRef.current)
-                .limit(2)
-                .get()
-                .then((collectionSnapshot) => {
-                  const data = collectionSnapshot.docs.map((docSnapshot) => {
-                    const id = docSnapshot.id;
-                    return {
-                      ...docSnapshot.data(),
-                      id,
-                    }; /* 解構return docSnapshot.data(); 將資料跟id合併 */
-                  });
-                  lastPostSnapshotRef.current =
-                    collectionSnapshot.docs[collectionSnapshot.docs.length - 1];
-                  setPosts([...posts, ...data]);
+            firebase
+              .firestore()
+              .collection("trainingData")
+              // .where("topic", "==", currentTopic)
+              .orderBy("startTime", "desc")
+              .startAfter(lastPostSnapshotRef.current)
+              .limit(2)
+              .get()
+              .then((collectionSnapshot) => {
+                const data = collectionSnapshot.docs.map((docSnapshot) => {
+                  const id = docSnapshot.id;
+                  return {
+                    ...docSnapshot.data(),
+                    id,
+                  }; /* 解構return docSnapshot.data(); 將資料跟id合併 */
                 });
-            } else {
-              firebase
-                .firestore()
-                .collection("posts")
-                .orderBy("createdAt", "desc") /* 依時間降冪排列(最新在前) */
-                .startAfter(lastPostSnapshotRef.current)
-                .limit(2) /* 限制顯示兩篇 */
-                .get()
-                .then((collectionSnapshot) => {
-                  const data = collectionSnapshot.docs.map((docSnapshot) => {
-                    const id = docSnapshot.id;
-                    return {
-                      ...docSnapshot.data(),
-                      id,
-                    }; /* 解構return docSnapshot.data(); 將資料跟id合併 */
-                  });
-                  lastPostSnapshotRef.current =
-                    collectionSnapshot.docs[collectionSnapshot.docs.length - 1];
-                  setPosts([...posts, ...data]); /* 解構原posts加上解構新增的 */
-                });
-            }
+                lastPostSnapshotRef.current =
+                  collectionSnapshot.docs[collectionSnapshot.docs.length - 1];
+                setPosts([...datas, ...data]);
+              });
           }
         }}
       />
