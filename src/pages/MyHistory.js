@@ -63,6 +63,7 @@ function MyHistory() {
     firebase
       .firestore()
       .collection("trainingData")
+      .orderBy("startTime", "desc")
       .get()
       .then((collectionSnapshot) => {
         const data = collectionSnapshot.docs.map((docSnapshot) => {
@@ -119,7 +120,7 @@ function MyHistory() {
               <Item>
                 <Item.Content>
                   <Header>
-                    {trainingData.startTime.toDate().toLocaleTimeString()}
+                    {trainingData.startTime.toDate().toLocaleString()}
                   </Header>
                   <Item.Description style={{ color: "#808080" }}>
                     &emsp; 使用機器：{trainingData.snNumber}

@@ -44,3 +44,12 @@ npm install firebase
 
 若firestore無法使用，請
 import "firebase/compat/firestore";
+
+
+---------host
+當「檔案無法載入，因為這個系統已停用指令碼執行」 $Set-ExecutionPolicy RemoteSigned
+npm install -g firebase-tools
+npm run build
+firebase init
+firebase deploy
+https://www.youtube.com/watch?v=IDHfvpsYShs&ab_channel=AndyWang
