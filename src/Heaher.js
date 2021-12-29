@@ -6,7 +6,7 @@ import firebase from "./utils/firebase";
 function Header({ user }) {
   return (
     <Menu>
-      <Menu.Item as={Link} to="/my/info">
+      <Menu.Item as={Link} to="/my/history">
         React APP
       </Menu.Item>
       <Menu.Item>

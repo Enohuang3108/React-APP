@@ -58,36 +58,19 @@ const data = [
 // const [datas, setDatas] = React.useState([]);
 
 function MyHistory() {
-  const location = useLocation();
-  const urlSearchParams = new URLSearchParams(location.search);
-  const currentTopic = urlSearchParams.get("topic");
-  const lastPostSnapshotRef = React.useRef(); /* 取得目前最下面的快照 */
-  /* 取出firestore資料 */
-  const [datas, setDatas] = React.useState([]);
-  React.useEffect(
-    () => {
-      firebase
-        .firestore()
-        .collection("trainingData")
-        //.where("topic", "==", currentTopic) /* 篩選類別 */
-        .orderBy("startTime", "desc") /* 依時間降冪排列(最新在前) */
-        .limit(10)
-        .get()
-        .then((collectionSnapshot) => {
-          const data = collectionSnapshot.docs.map((docSnapshot) => {
-            const id = docSnapshot.id;
-            return {
-              ...docSnapshot.data(),
-              id,
-            }; /* 解構return docSnapshot.data(); 將資料跟id合併 */
-          });
-          /* 抓最新文章的第二篇 */
-          lastPostSnapshotRef.current =
-            collectionSnapshot.docs[collectionSnapshot.docs.length - 1];
-          setDatas(data); /* 抓最新文章的第二篇 */
+  const [DBdatas, setDBdatas] = React.useState([]);
+  React.useEffect(() => {
+    firebase
+      .firestore()
+      .collection("trainingData")
+      .get()
+      .then((collectionSnapshot) => {
+        const data = collectionSnapshot.docs.map((docSnapshot) => {
+          return docSnapshot.data();
         });
-    } /* [currentTopic] */
-  );
+        setDBdatas(data);
+      });
+  }, []);
   return (
     <>
       <Header>訓練歷程</Header>
@@ -130,51 +113,32 @@ function MyHistory() {
       <Header size="medium">歷史訓練數據</Header>
 
       <Item.Group>
-        {datas.map((data) => {
-          console.log(data.startTime);
-          return (
-            <Item /*key={data.id}  as={Link} to={`/posts/${post.id}`} */>
-              <Item.Content>
-                <Item.Header>{data.startTime}</Item.Header>
-                <Item.Description>{data.trainingType}</Item.Description>
+        <Header size="small">
+          {DBdatas.map((trainingData) => {
+            return (
+              <Item>
+                <Item.Content>
+                  <Header>
+                    {trainingData.startTime.toDate().toLocaleTimeString()}
+                  </Header>
+                  <Item.Description style={{ color: "#808080" }}>
+                    &emsp; 使用機器：{trainingData.snNumber}
+                  </Item.Description>
+                  <Item.Description style={{ color: "#808080" }}>
+                    &emsp; 訓練類型：{trainingData.trainingType}
+                  </Item.Description>
+                  <Item.Description style={{ color: "#808080" }}>
+                    &emsp; 使用時間：{trainingData.takesTimes}
+                  </Item.Description>
+                  <br />
 
-                <Divider variant="inset" component="li" />
-                <div>
-                  &nbsp;
-                  <br />
-                  <br />
-                </div>
-              </Item.Content>
-            </Item>
-          );
-        })}
+                  <Divider variant="inset" component="li" />
+                </Item.Content>
+              </Item>
+            );
+          })}
+        </Header>
       </Item.Group>
-      <Waypoint
-        onEnter={() => {
-          if (lastPostSnapshotRef.current) {
-            firebase
-              .firestore()
-              .collection("trainingData")
-              // .where("topic", "==", currentTopic)
-              .orderBy("startTime", "desc")
-              .startAfter(lastPostSnapshotRef.current)
-              .limit(2)
-              .get()
-              .then((collectionSnapshot) => {
-                const data = collectionSnapshot.docs.map((docSnapshot) => {
-                  const id = docSnapshot.id;
-                  return {
-                    ...docSnapshot.data(),
-                    id,
-                  }; /* 解構return docSnapshot.data(); 將資料跟id合併 */
-                });
-                lastPostSnapshotRef.current =
-                  collectionSnapshot.docs[collectionSnapshot.docs.length - 1];
-                setPosts([...datas, ...data]);
-              });
-          }
-        }}
-      />
     </>
   );
 }

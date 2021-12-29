@@ -78,7 +78,7 @@ function App() {
               </Grid>
             </Container>
           ) : (
-            <Redirect to="/posts" />
+            <Redirect to="/my/history" />
           )}
           {/* 若非登入導到首頁 */}
         </Route>
