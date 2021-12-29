@@ -16,7 +16,7 @@ function Signin() {
     if (activeItem === "register") {
       firebase
         .auth()
-        .createUserWithEmailAndPassword(email, password)
+        .createUserWithEmailAndPassword(email + "@freebionics.com", password)
         .then(() => {
           history.push("/");
           setIsLoading(false);
@@ -30,7 +30,7 @@ function Signin() {
               seterrorMessage("信箱格式不正確");
               break;
             case "auth/weak-password":
-              seterrorMessage("密碼強度不足");
+              seterrorMessage("密碼強度不足，請輸入最少六位數密碼");
               break;
             default:
           }
@@ -39,7 +39,7 @@ function Signin() {
     } else if (activeItem === "signin") {
       firebase
         .auth()
-        .signInWithEmailAndPassword(email, password)
+        .signInWithEmailAndPassword(email + "@freebionics.com", password)
         .then(() => {
           history.push("/");
           setIsLoading(false);
@@ -87,10 +87,10 @@ function Signin() {
       <Form onSubmit={onSubmit}>
         {/* 按下按鈕執行onSubmit Function */}
         <Form.Input
-          label="信箱"
+          label="帳號"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="請輸入信箱"
+          placeholder="請輸入帳號"
         />
         <Form.Input
           label="密碼"
